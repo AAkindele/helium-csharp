@@ -1,4 +1,4 @@
-using Microsoft.Azure.Cosmos;
+using Azure.Cosmos;
 using System;
 
 namespace Helium.DataAccessLayer

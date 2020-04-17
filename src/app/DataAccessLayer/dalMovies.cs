@@ -1,5 +1,5 @@
 using Helium.Model;
-using Microsoft.Azure.Cosmos;
+using Azure.Cosmos;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;

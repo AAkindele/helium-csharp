@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
+using Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -46,7 +46,7 @@ namespace Helium.Controllers
             catch (CosmosException ce)
             {
                 // log and return Cosmos status code
-                if (ce.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (ce.Status == (int)System.Net.HttpStatusCode.NotFound)
                 {
                     logger.LogWarning($"CosmosNotFound:{method}");
                 }
