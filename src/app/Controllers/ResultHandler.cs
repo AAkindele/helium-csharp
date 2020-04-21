@@ -68,8 +68,6 @@ namespace Helium.Controllers
             }
         }
 
-        public virtual string ActivityId { get; }
-
         /// <summary>
         /// ContentResult factory
         /// </summary>

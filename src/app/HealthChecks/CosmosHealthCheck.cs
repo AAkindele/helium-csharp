@@ -32,7 +32,6 @@ namespace Helium
             // save to member vars
             this.logger = logger;
             this.dal = dal;
-           // this.ActivityId = activityId;
 
             // setup serialization options
             if (jsonOptions == null)
