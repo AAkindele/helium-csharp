@@ -52,10 +52,10 @@ namespace Helium.Controllers
                 }
                 else
                 {
-                    logger.LogError($"CosmosException:{method}:{ce.StatusCode}:{ce.ActivityId}:{ce.Message}\n{ce}");
+                    logger.LogError($"CosmosException:{method}:{ce.Status}:{ce.ActivityId}:{ce.Message}\n{ce}");
                 }
 
-                return CreateResult(errorMessage, (int)ce.StatusCode);
+                return CreateResult(errorMessage, (int)ce.Status);
             }
 
             catch (Exception ex)
@@ -67,6 +67,8 @@ namespace Helium.Controllers
                 return CreateResult("Internal Server Error", (int)System.Net.HttpStatusCode.InternalServerError);
             }
         }
+
+        public virtual string ActivityId { get; }
 
         /// <summary>
         /// ContentResult factory

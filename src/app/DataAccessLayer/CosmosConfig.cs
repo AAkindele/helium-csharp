@@ -9,7 +9,7 @@ namespace Helium.DataAccessLayer
     internal class CosmosConfig
     {
         public CosmosClient Client = null;
-        public Container Container = null;
+        public CosmosContainer Container = null;
 
         // default values for Cosmos Options
         public int MaxRows = 1000;

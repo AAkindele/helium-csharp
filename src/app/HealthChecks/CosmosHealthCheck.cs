@@ -32,6 +32,7 @@ namespace Helium
             // save to member vars
             this.logger = logger;
             this.dal = dal;
+           // this.ActivityId = activityId;
 
             // setup serialization options
             if (jsonOptions == null)
@@ -99,7 +100,7 @@ namespace Helium
             catch (CosmosException ce)
             {
                 // log and return Unhealthy
-                logger.LogError($"CosmosException:Healthz:{ce.StatusCode}:{ce.ActivityId}:{ce.Message}\n{ce}");
+                logger.LogError($"CosmosException:Healthz:{ce.Status}:{ce.ActivityId}:{ce.Message}\n{ce}");
 
                 data.Add("CosmosException", ce.Message);
 
