@@ -1,6 +1,6 @@
+using Azure.Cosmos;
 using Helium.DataAccessLayer;
 using Helium.Model;
-using Azure.Cosmos;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using System;
@@ -99,7 +99,7 @@ namespace Helium
             catch (CosmosException ce)
             {
                 // log and return Unhealthy
-                logger.LogError($"CosmosException:Healthz:{ce.Status}:{ce.ActivityId}:{ce.Message}\n{ce}");
+                logger.LogError($"CosmosException:Healthz:{ce.Status}:{ce.ErrorCode}:{ce.Message}\n{ce}");
 
                 data.Add("CosmosException", ce.Message);
 

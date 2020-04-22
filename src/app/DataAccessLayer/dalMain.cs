@@ -1,8 +1,8 @@
+using Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Azure.Cosmos;
 
 namespace Helium.DataAccessLayer
 {

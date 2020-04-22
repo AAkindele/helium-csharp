@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Azure.Cosmos;
+﻿using Azure.Cosmos;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -52,10 +52,10 @@ namespace Helium.Controllers
                 }
                 else
                 {
-                    logger.LogError($"CosmosException:{method}:{ce.Status}:{ce.ActivityId}:{ce.Message}\n{ce}");
+                    logger.LogError($"CosmosException:{method}:{ce.Status}:{ce.ErrorCode}:{ce.Message}\n{ce}");
                 }
 
-                return CreateResult(errorMessage, (int)ce.Status);
+                return CreateResult(errorMessage, ce.Status);
             }
 
             catch (Exception ex)
