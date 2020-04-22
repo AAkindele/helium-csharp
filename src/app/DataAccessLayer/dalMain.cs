@@ -2,6 +2,8 @@ using Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Helium.DataAccessLayer
@@ -182,18 +184,50 @@ namespace Helium.DataAccessLayer
         private async Task<IEnumerable<T>> InternalCosmosDBSqlQuery<T>(string sql)
         {
             // run query
-            var query = cosmosDetails.Container.GetItemQueryIterator<T>(sql, requestOptions: cosmosDetails.QueryRequestOptions);
-
+            var query = cosmosDetails.Container.GetItemQueryStreamIterator(sql, requestOptions: cosmosDetails.QueryRequestOptions);
             List<T> results = new List<T>();
 
-            var pages = query.AsPages(null, 1000);
-
-            await foreach ( var p in pages )
+            JsonSerializerOptions options = new JsonSerializerOptions
             {
-                results.AddRange(p.Values);
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+            };
+            options.Converters.Add(new JsonStringEnumConverter());
+            options.Converters.Add(new TimeSpanConverter());
+
+
+            //var pages = query.AsPages(null, 1000);
+
+            await foreach (var p in query)
+            {
+                var stream = p.ContentStream;
+                byte[] buff = new byte[stream.Length];
+                stream.Read(buff, 0, (int)stream.Length);
+                string s = System.Text.Encoding.UTF8.GetString(buff);
+
+#pragma warning disable CA1307 // Specify StringComparison
+                s = s.Substring(0, s.IndexOf("\"_count\":") - 1);
+                s = s.Substring(s.IndexOf("\"Documents\":") + 12);
+#pragma warning restore CA1307 // Specify StringComparison
+
+                var res = JsonSerializer.Deserialize<List<T>>(s, options);
+
+                results.AddRange(res);
             }
 
             return results;
         }
+    }
+
+    public class TempResult<T>
+    {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+        public string _rid { get; set; }
+#pragma warning disable CA2227 // Collection properties should be read only
+        public List<T> Documents { get; set; }
+#pragma warning restore CA2227 // Collection properties should be read only
+        public int _count { get; set; }
+#pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 }

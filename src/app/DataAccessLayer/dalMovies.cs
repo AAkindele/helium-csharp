@@ -139,7 +139,9 @@ namespace Helium.DataAccessLayer
                 queryDefinition.WithParameter("@rating", rating);
             }
 
-            return await InternalCosmosDBSqlQuery<Movie>(queryDefinition).ConfigureAwait(false);
+            return await InternalCosmosDBSqlQuery<Movie>(sql).ConfigureAwait(false);
+
+//            return await InternalCosmosDBSqlQuery<Movie>(queryDefinition).ConfigureAwait(false);
         }
 
         /// <summary>
