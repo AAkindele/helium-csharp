@@ -52,6 +52,7 @@ namespace Helium.Controllers
                 }
                 else
                 {
+                    //TODO check the ce status (ACtivityId no longer available)
                     logger.LogError($"CosmosException:{method}:{ce.Status}:{ce.ErrorCode}:{ce.Message}\n{ce}");
                 }
 

@@ -163,12 +163,11 @@ namespace Helium.DataAccessLayer
 
             List<T> results = new List<T>();
 
-            while (query.HasMoreResults)
+            var pages = query.AsPages(null, 1000);
+
+            await foreach (var p in pages)
             {
-                foreach (var doc in await query.ReadNextAsync().ConfigureAwait(false))
-                {
-                    results.Add(doc);
-                }
+                results.AddRange(p.Values);
             }
 
             return results;
@@ -187,13 +186,13 @@ namespace Helium.DataAccessLayer
 
             List<T> results = new List<T>();
 
-            while (query.HasMoreResults)
+            var pages = query.AsPages(null, 1000);
+
+            await foreach ( var p in pages )
             {
-                foreach (var doc in await query.ReadNextAsync().ConfigureAwait(false))
-                {
-                    results.Add(doc);
-                }
+                results.AddRange(p.Values);
             }
+
             return results;
         }
     }

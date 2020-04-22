@@ -53,7 +53,7 @@ namespace Helium.DataAccessLayer
             var ir = await cosmosDetails.Container.ReadItemAsync<IDictionary<string, string>>(key.ToLowerInvariant(), partitionKey).ConfigureAwait(false);
 
             // return the value
-            return ir.Resource["genre"];
+            return ir.Value["genre"];
         }
     }
 }
