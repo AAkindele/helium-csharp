@@ -1,3 +1,4 @@
+using Azure;
 using Azure.Cosmos;
 using System;
 using System.Collections.Generic;
@@ -163,11 +164,20 @@ namespace Helium.DataAccessLayer
             // run query
             var query = cosmosDetails.Container.GetItemQueryIterator<T>(queryDefinition, requestOptions: cosmosDetails.QueryRequestOptions);
 
+            return await InternalCosmosQueryResultsHandlerAsync(query).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Generic functon to handle Cosmos query results
+        /// </summary>
+        /// <typeparam name="T">POCO type</typeparam>
+        /// <param name="iterator">Cosmos iterator</param>
+        /// <returns></returns>
+        private async Task<IEnumerable<T>> InternalCosmosQueryResultsHandlerAsync<T>(AsyncPageable<T> iterator)
+        {
             List<T> results = new List<T>();
 
-            var pages = query.AsPages(null, 1000);
-
-            await foreach (var p in pages)
+            await foreach (var p in iterator.AsPages())
             {
                 results.AddRange(p.Values);
             }
@@ -184,39 +194,9 @@ namespace Helium.DataAccessLayer
         private async Task<IEnumerable<T>> InternalCosmosDBSqlQuery<T>(string sql)
         {
             // run query
-            var query = cosmosDetails.Container.GetItemQueryStreamIterator(sql, requestOptions: cosmosDetails.QueryRequestOptions);
-            List<T> results = new List<T>();
+            var query = cosmosDetails.Container.GetItemQueryIterator<T>(sql, requestOptions: cosmosDetails.QueryRequestOptions);
 
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                IgnoreNullValues = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-            };
-            options.Converters.Add(new JsonStringEnumConverter());
-            options.Converters.Add(new TimeSpanConverter());
-
-
-            //var pages = query.AsPages(null, 1000);
-
-            await foreach (var p in query)
-            {
-                var stream = p.ContentStream;
-                byte[] buff = new byte[stream.Length];
-                stream.Read(buff, 0, (int)stream.Length);
-                string s = System.Text.Encoding.UTF8.GetString(buff);
-
-#pragma warning disable CA1307 // Specify StringComparison
-                s = s.Substring(0, s.IndexOf("\"_count\":") - 1);
-                s = s.Substring(s.IndexOf("\"Documents\":") + 12);
-#pragma warning restore CA1307 // Specify StringComparison
-
-                var res = JsonSerializer.Deserialize<List<T>>(s, options);
-
-                results.AddRange(res);
-            }
-
-            return results;
+            return await InternalCosmosQueryResultsHandlerAsync(query).ConfigureAwait(false);
         }
     }
 
