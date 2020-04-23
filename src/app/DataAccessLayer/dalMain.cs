@@ -199,15 +199,4 @@ namespace Helium.DataAccessLayer
             return await InternalCosmosQueryResultsHandlerAsync(query).ConfigureAwait(false);
         }
     }
-
-    public class TempResult<T>
-    {
-#pragma warning disable CA1707 // Identifiers should not contain underscores
-        public string _rid { get; set; }
-#pragma warning disable CA2227 // Collection properties should be read only
-        public List<T> Documents { get; set; }
-#pragma warning restore CA2227 // Collection properties should be read only
-        public int _count { get; set; }
-#pragma warning restore CA1707 // Identifiers should not contain underscores
-    }
 }

@@ -50,14 +50,15 @@ namespace Helium.DataAccessLayer
 
             // read the genre from Cosmos
             // this will throw exception if not found
-            var ir = await cosmosDetails.Container.ReadItemAsync<GenreClass>(key.ToLowerInvariant(), partitionKey).ConfigureAwait(false);
+            var ir = await cosmosDetails.Container.ReadItemAsync<Genre>(key.ToLowerInvariant(), partitionKey).ConfigureAwait(false);
 
             // return the value
             return ir.Value.genre;
         }
     }
 
-    public class GenreClass
+    // TODO - figure out a better way to do this
+    public class Genre
     {
         public string genre { get; set; }
     }
