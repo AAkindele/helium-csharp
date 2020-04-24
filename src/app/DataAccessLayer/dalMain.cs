@@ -124,6 +124,7 @@ namespace Helium.DataAccessLayer
 
             // open and test a new client / container
             var c = new CosmosClient(cosmosUrl.AbsoluteUri, cosmosKey, cosmosDetails.CosmosClientOptions);
+            
             var con = c.GetContainer(cosmosDatabase, cosmosCollection);
             await con.ReadItemAsync<dynamic>("action", new PartitionKey("0")).ConfigureAwait(false);
 
@@ -177,9 +178,16 @@ namespace Helium.DataAccessLayer
         {
             List<T> results = new List<T>();
 
-            await foreach (var p in iterator.AsPages())
+            try
             {
-                results.AddRange(p.Values);
+                await foreach (var p in iterator.AsPages())
+                {
+                    results.AddRange(p.Values);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
 
             return results;
