@@ -162,37 +162,16 @@ namespace Helium.DataAccessLayer
         /// <returns>Enumerable list of objects of type T.</returns>
         private async Task<IEnumerable<T>> InternalCosmosDBSqlQuery<T>(QueryDefinition queryDefinition)
         {
-            // run query
-            var query = cosmosDetails.Container.GetItemQueryIterator<T>(queryDefinition, requestOptions: cosmosDetails.QueryRequestOptions);
-
-            return await InternalCosmosQueryResultsHandlerAsync(query).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Generic functon to handle Cosmos query results
-        /// </summary>
-        /// <typeparam name="T">POCO type</typeparam>
-        /// <param name="iterator">Cosmos iterator</param>
-        /// <returns></returns>
-        private async Task<IEnumerable<T>> InternalCosmosQueryResultsHandlerAsync<T>(AsyncPageable<T> iterator)
-        {
             List<T> results = new List<T>();
-
-            try
+            
+            // run query
+            await foreach(var t in cosmosDetails.Container.GetItemQueryIterator<T>(queryDefinition, requestOptions: cosmosDetails.QueryRequestOptions))
             {
-                await foreach (var p in iterator.AsPages())
-                {
-                    results.AddRange(p.Values);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
+                results.Add(t);
             }
 
             return results;
         }
-
         /// <summary>
         /// Generic function to be used by subclasses to execute arbitrary queries and return type T.
         /// </summary>
@@ -201,10 +180,15 @@ namespace Helium.DataAccessLayer
         /// <returns>Enumerable list of objects of type T.</returns>
         private async Task<IEnumerable<T>> InternalCosmosDBSqlQuery<T>(string sql)
         {
-            // run query
-            var query = cosmosDetails.Container.GetItemQueryIterator<T>(sql, requestOptions: cosmosDetails.QueryRequestOptions);
+            List<T> results = new List<T>();
 
-            return await InternalCosmosQueryResultsHandlerAsync(query).ConfigureAwait(false);
+            // run query
+            await foreach(var t in cosmosDetails.Container.GetItemQueryIterator<T>(sql, requestOptions: cosmosDetails.QueryRequestOptions))
+            {
+                results.Add(t);
+            }
+
+            return results;
         }
     }
 }
