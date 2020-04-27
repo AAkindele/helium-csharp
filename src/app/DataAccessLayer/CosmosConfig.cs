@@ -3,9 +3,9 @@ using Azure.Cosmos.Serialization;
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace Helium.DataAccessLayer
+
+namespace CSE.Helium.DataAccessLayer
 {
     /// <summary>
     /// Internal class for Cosmos config

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Helium.Model
+namespace CSE.Helium.Model
 {
     public class FeaturedMovie
     {

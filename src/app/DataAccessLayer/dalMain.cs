@@ -1,13 +1,10 @@
-using Azure;
 using Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Helium.DataAccessLayer
+namespace CSE.Helium.DataAccessLayer
 {
     /// <summary>
     /// Data Access Layer for CosmosDB
