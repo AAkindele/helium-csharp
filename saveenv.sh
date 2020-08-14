@@ -27,4 +27,3 @@ else
 
   cat ~/${He_Name}.env
 fi
-
