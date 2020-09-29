@@ -46,13 +46,13 @@ jobs:
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # build release image
-        docker build . -t helium-csharp-codespaces -f .devcontainer/Dockerfile
+        docker build . -t helium-csharp-codespaces -f docs/codespaces/Dockerfile
 
     - name: Docker Tag and Push
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # tag the repo with :latest
-        docker tag helium-csharp-codespaces retaildevcrew/helium-csharp-codespaces:latest
+        docker tag helium-csharp-codespaces aakindele/helium-csharp-codespaces:latest
 
         # Push to the repo
-        docker push retaildevcrew/helium-csharp-codespaces:latest
+        docker push aakindele/helium-csharp-codespaces:latest
