@@ -1,12 +1,15 @@
-name: C Sharp Codespaces Image Build
+name: CSharp Codespaces Image Build
 
 on:
+  schedule:
+    # Run weekly at 3:00 AM
+    - cron: "0 3 * * 0"
   push:
     branches:
       - test-docker-build-actions
 
     paths:
-    - 'docs/codespaces/Dockerfile'
+    - '.devcontainer/Dockerfile'
     - '.github/workflows/codespaces.yml'
 
 jobs:
@@ -46,13 +49,13 @@ jobs:
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # build release image
-        docker build . -t helium-csharp-codespaces -f docs/codespaces/Dockerfile
+        docker build . -t codespaces-dotnet -f .devcontainer/Dockerfile
 
     - name: Docker Tag and Push
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # tag the repo with :latest
-        docker tag helium-csharp-codespaces aakindele/helium-csharp-codespaces:latest
+        docker tag codespaces-dotnet retaildevcrew/codespaces-dotnet:latest
 
         # Push to the repo
-        docker push aakindele/helium-csharp-codespaces:latest
+        docker push retaildevcrew/codespaces-dotnet:latest
