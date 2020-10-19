@@ -20,6 +20,7 @@ namespace CSE.Helium.Model
         public List<string> Profession { get; set; }
         public List<ActorMovie> Movies { get; set; }
 
+
         /// <summary>
         /// Compute the partition key based on the movieId or actorId
         ///
