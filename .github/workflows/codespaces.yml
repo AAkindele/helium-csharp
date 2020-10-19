@@ -29,7 +29,7 @@ jobs:
         # check that all Docker secrets are set
         if [[ "${{ secrets.DOCKER_PAT }}" != "" && "${{ secrets.DOCKER_USER }}" != "" ]];
         then
-          echo "::set-env name=DOCKER_SET::true"
+          echo "DOCKER_SET=true" >> $GITHUB_ENV
         fi
 
     - name: Docker Login
@@ -55,7 +55,7 @@ jobs:
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # tag the repo with :latest
-        docker tag codespaces-dotnet retaildevcrew/codespaces-dotnet:latest
+        docker tag codespaces-dotnet aakindele/codespaces-dotnet:latest
 
         # Push to the repo
-        docker push retaildevcrew/codespaces-dotnet:latest
+        docker push aakindele/codespaces-dotnet:latest
